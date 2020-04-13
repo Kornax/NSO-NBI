@@ -1,14 +1,13 @@
 ---
-title: API Reference
+title: NBI para NSO Empresariales
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
   - python
   - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
+  - <a href='https://corp.antel.com.uy/wiki/display/NSO'>Wiki del Proyecto</a>
   - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -17,223 +16,95 @@ includes:
 search: true
 ---
 
-# Introduction
+# Introducción
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Para realizar las pruebas en NSO se creó un docker exclusivo para uso de SESE, dentro del mismo se cargaron los paquetes con el código de las consultas a probar.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+<a href='https://corp.antel.com.uy/wiki/display/NSO'>Más Información en la wiki</a>
 
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
+# Autenticación
 
-# Authentication
+El acceso es con una autenticación de usuario/contraseña. <a href='https://corp.antel.com.uy/wiki/display/NSO'>Ver Wiki</a>
 
-> To authorize, use this code:
+# Altas
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
+## Alta ONU
 
 ```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
+import http.client
+import mimetypes
+conn = http.client.HTTPSConnection("{{IP_ADDRESS}}", {{PUERTO}})
+payload = "{\r\n \"antel-pon-onu:onus\": [ {\r\n    \"olt\": \"{{OLT}}\",\r\n    \"rack\": \"{{RACK}}\",\r\n    \"shelf\": \"{{SHELF}}\",\r\n    \"slot\": \"{{SLOT}}\",\r\n    \"port\": \"{{PORT}}\",\r\n    \"onuid\": \"{{ONUID}}\",\r\n    \"technology\": \"{{TECHNOLOGY}}\",\r\n    \"slot-type\": \"{{SLOT_TYPE}}\",\r\n    \"autentication-mode\": \"password\",\r\n    \"password\": \"{{PASSWORD}}\"\r\n  }  ]\r\n}"
+headers = {
+  'Content-Type': 'application/yang-data+json',
+  'Accept': 'application/yang-data+json',
+  'Authorization': 'Basic cm9vdDpjaXNjbw==',
+  'Content-Type': 'text/plain'
+}
+conn.request("POST", "/restconf/data/services/pon/infraestructure?no-out-of-sync-check", payload, headers)
+res = conn.getresponse()
+data = res.read()
+print(data.decode("utf-8"))
 ```
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+curl --location --request POST 'http://{{IP_ADDRESS}}:{{PUERTO}}/restconf/data/services/pon/infraestructure?no-out-of-sync-check' \
+--header 'Content-Type: application/yang-data+json' \
+--header 'Accept: application/yang-data+json' \
+--header 'Authorization: Basic cm9vdDpjaXNjbw==' \
+--header 'Content-Type: text/plain' \
+--data-raw '{
+ "antel-pon-onu:onus": [ {
+    "olt": "{{OLT}}",
+    "rack": "{{RACK}}",
+    "shelf": "{{SHELF}}",
+    "slot": "{{SLOT}}",
+    "port": "{{PORT}}",
+    "onuid": "{{ONUID}}",
+    "technology": "{{TECHNOLOGY}}",
+    "slot-type": "{{SLOT_TYPE}}",
+    "autentication-mode": "password",
+    "password": "{{PASSWORD}}"
+  }  ]
+}'
 ```
 
 ```javascript
-const kittn = require('kittn');
 
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
 
-This endpoint retrieves all kittens.
+```
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET http://IP_address:port/restconf/data/services/pon/infraestructure?no-out-of-sync-check`
 
-### Query Parameters
+### Parametros esperados
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+Parameter | Description
+--------- | -----------
+OLT  | Nombre de la OLT a configurar.
+RACK | Rack del puerto PON.
+SHELF | Shelf del puerto PON.
+SLOT | Slot del puerto PON.
+PORT | Puerto PON.
+ONUID | Id de a ONU.
+
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Ejemplo de comentario sobre un exito!
 </aside>
 
-## Get a Specific Kitten
+<aside class="failure">
+Ejemplo de comentario sobre un exito!
+</aside>
 
-```ruby
-require 'kittn'
+## Alta Base
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
+## Alta Servicio Tipo 1
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
-
+## Alta Servicio Tipo 2
