@@ -99,8 +99,8 @@ ONUID | Id de a ONU.
 Ejemplo de comentario sobre un exito!
 </aside>
 
-<aside class="failure">
-Ejemplo de comentario sobre un exito!
+<aside class="notice">
+Esto es una nota importante!
 </aside>
 
 ## Alta Base
