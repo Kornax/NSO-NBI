@@ -4,7 +4,6 @@ title: NBI para NSO Empresariales
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
   - python
-  - javascript
 
 toc_footers:
   - <a href='https://corp.antel.com.uy/wiki/display/NSO'>Wiki del Proyecto</a>
@@ -26,7 +25,38 @@ Para realizar las pruebas en NSO se creó un docker exclusivo para uso de SESE, 
 
 El acceso es con una autenticación de usuario/contraseña. <a href='https://corp.antel.com.uy/wiki/display/NSO'>Ver Wiki</a>
 
-# Altas
+# ONU
+
+## Show ONU
+
+```shell
+curl --location --request GET 'http://{{IP_ADDRESS}}:{{PUERTO}}/restconf/data/services/pon/infraestructure/onus={{OLT}},{{RACK}},{{SHELF}},{{SLOT}},{{PORT}},{{ONUID}}?content=config' \
+--header 'Accept: application/yang-data+json' \
+--header 'Authorization: Basic cm9vdDpjaXNjbw=='
+```
+
+```python
+import http.client
+import mimetypes
+conn = http.client.HTTPSConnection("{{IP_ADDRESS}}", {{PUERTO}})
+payload = ''
+headers = {
+  'Accept': 'application/yang-data+json',
+  'Authorization': 'Basic cm9vdDpjaXNjbw=='
+}
+conn.request("GET", "/restconf/data/services/pon/infraestructure/onus={{OLT}},{{RACK}},{{SHELF}},{{SLOT}},{{PORT}},{{ONUID}}?content=config", payload, headers)
+res = conn.getresponse()
+data = res.read()
+print(data.decode("utf-8"))
+```
+
+### HTTP Request
+
+`http://{{IP_ADDRESS}}:{{PUERTO}}/restconf/data/services/pon/infraestructure/onus={{OLT}},{{RACK}},{{SHELF}},{{SLOT}},{{PORT}},{{ONUID}}?content=config`
+
+##Parametros de entrada
+
+<%= partial "includes/test_partial.md.erb" %>
 
 ## Alta ONU
 
@@ -69,19 +99,45 @@ curl --location --request POST 'http://{{IP_ADDRESS}}:{{PUERTO}}/restconf/data/s
 }'
 ```
 
-```javascript
-
-```
-
 > The above command returns JSON structured like this:
 
-```json
+```json--Éxito
+{
+ "antel-pon-onu:onus": [ {
+    "olt": "{{OLT}}",
+    "rack": "{{RACK}}",
+    "shelf": "{{SHELF}}",
+    "slot": "{{SLOT}}",
+    "port": "{{PORT}}",
+    "onuid": "{{ONUID}}",
+    "technology": "{{TECHNOLOGY}}",
+    "slot-type": "{{SLOT_TYPE}}",
+    "autentication-mode": "password",
+    "password": "{{PASSWORD}}"
+  }  ]
+}
+```
 
+```json--Error 505
+{
+ "antel-pon-onu:onus": [ {
+    "olt": "{{OLT}}",
+    "rack": "{{RACK}}",
+    "shelf": "{{SHELF}}",
+    "slot": "{{SLOT}}",
+    "port": "{{PORT}}",
+    "onuid": "{{ONUID}}",
+    "technology": "{{TECHNOLOGY}}",
+    "slot-type": "{{SLOT_TYPE}}",
+    "autentication-mode": "password",
+    "password": "{{PASSWORD}}"
+  }  ]
+}
 ```
 
 ### HTTP Request
 
-`GET http://IP_address:port/restconf/data/services/pon/infraestructure?no-out-of-sync-check`
+`GET http://{{IP_ADDRESS}}:{{PORT}}/restconf/data/services/pon/infraestructure?no-out-of-sync-check`
 
 ### Parametros esperados
 
@@ -103,8 +159,55 @@ Ejemplo de comentario sobre un exito!
 Esto es una nota importante!
 </aside>
 
-## Alta Base
+<aside class="warning">
+Esto es un problema!
+</aside>
+
+## Clear ONU
+
+
+### Parametros esperados
+
+
+
+
+## Baja ONU
+
+
+<code></code>
+
+### Parametros esperados
+
+Parameter | Description
+--------- | -----------
+OLT  | Nombre de la OLT a configurar.
+RACK | Rack del puerto PON.
+SHELF | Shelf del puerto PON.
+SLOT | Slot del puerto PON.
+PORT | Puerto PON.
+ONUID | Id de a ONU.
+
+# Gestión de Servicios
+
+## Alta Gestión HSI (ex Alta Base)
+
+
+## Baja Gestión HSI (ex Alta Base)
+
+## Alta Gestión AXS
+
+## Baja Gestión AXS
+
+# Servicios
+
+## Get Servicio Tipo 1 
 
 ## Alta Servicio Tipo 1
 
+## Baja Servicio Tipo 1
+
+## Get Servicio Tipo 2 
+
 ## Alta Servicio Tipo 2
+
+## Baja Servicio Tipo 2
