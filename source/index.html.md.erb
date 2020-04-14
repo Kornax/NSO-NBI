@@ -52,9 +52,9 @@ print(data.decode("utf-8"))
 
 ### HTTP Request
 
-`http://{{IP_ADDRESS}}:{{PUERTO}}/restconf/data/services/pon/infraestructure/onus={{OLT}},{{RACK}},{{SHELF}},{{SLOT}},{{PORT}},{{ONUID}}?content=config`
+`GET http://{{IP_ADDRESS}}:{{PUERTO}}/restconf/data/services/pon/infraestructure/onus={{OLT}},{{RACK}},{{SHELF}},{{SLOT}},{{PORT}},{{ONUID}}?content=config`
 
-##Parametros de entrada
+### Parametros de entrada
 
 <%= partial "includes/references/onu_input.md.erb" %>
 
@@ -101,7 +101,7 @@ curl --location --request POST 'http://{{IP_ADDRESS}}:{{PUERTO}}/restconf/data/s
 
 > The above command returns JSON structured like this:
 
-```json--Éxito
+```json--201
 {
  "antel-pon-onu:onus": [ {
     "olt": "{{OLT}}",
@@ -118,7 +118,7 @@ curl --location --request POST 'http://{{IP_ADDRESS}}:{{PUERTO}}/restconf/data/s
 }
 ```
 
-```json--Error 505
+```json--Error505
 {
  "antel-pon-onu:onus": [ {
     "olt": "{{OLT}}",
@@ -139,17 +139,9 @@ curl --location --request POST 'http://{{IP_ADDRESS}}:{{PUERTO}}/restconf/data/s
 
 `GET http://{{IP_ADDRESS}}:{{PORT}}/restconf/data/services/pon/infraestructure?no-out-of-sync-check`
 
-### Parametros esperados
+### Parametros de entrada
 
-Parameter | Description
---------- | -----------
-OLT  | Nombre de la OLT a configurar.
-RACK | Rack del puerto PON.
-SHELF | Shelf del puerto PON.
-SLOT | Slot del puerto PON.
-PORT | Puerto PON.
-ONUID | Id de a ONU.
-
+<%= partial "includes/references/onu_input.md.erb" %>
 
 <aside class="success">
 Ejemplo de comentario sobre un exito!
@@ -165,27 +157,15 @@ Esto es un problema!
 
 ## Clear ONU
 
+### Parametros de entrada
 
-### Parametros esperados
-
-
-
+<%= partial "includes/references/onu_input.md.erb" %>
 
 ## Baja ONU
 
+### Parametros de entrada
 
-<code></code>
-
-### Parametros esperados
-
-Parameter | Description
---------- | -----------
-OLT  | Nombre de la OLT a configurar.
-RACK | Rack del puerto PON.
-SHELF | Shelf del puerto PON.
-SLOT | Slot del puerto PON.
-PORT | Puerto PON.
-ONUID | Id de a ONU.
+<%= partial "includes/references/onu_input.md.erb" %>
 
 # Gestión de Servicios
 
